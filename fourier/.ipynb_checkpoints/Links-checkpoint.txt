@@ -1,0 +1,7 @@
+https://en.wikipedia.org/wiki/Fourier_series
+https://en.wikipedia.org/wiki/Periodic_function
+https://en.wikipedia.org/wiki/Fourier_transform
+
+
+https://towardsdatascience.com/fourier-transform-for-time-series-292eb887b101
+https://www.holiday-weather.com/toronto/averages
