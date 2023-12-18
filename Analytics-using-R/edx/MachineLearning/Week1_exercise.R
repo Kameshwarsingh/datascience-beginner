@@ -1,0 +1,161 @@
+library(dslabs)
+library(dplyr)
+library(lubridate)
+data(reported_heights)
+
+
+
+dat <- mutate(reported_heights, date_time = ymd_hms(time_stamp)) %>%
+  filter(date_time >= make_date(2016, 01, 25) & date_time < make_date(2016, 02, 1)) %>%
+  mutate(type = ifelse(day(date_time) == 25 & hour(date_time) == 8 & between(minute(date_time), 15, 30), "inclass","online")) %>%
+  select(sex, type)
+
+y <- factor(dat$sex, c("Female", "Male"))
+x <- dat$type
+
+names(reported_heights)
+names(dat)
+glimpse(dat)
+
+dat %>%
+  group_by(sex) %>%
+    summarise(count=n())
+
+
+
+
+
+################ inclass #######################################
+
+inclass_by_gender <- dat %>%
+  filter(type=="inclass") %>%
+  group_by(sex) %>%
+  summarise(count=n())
+
+inclass_by_gender
+##Female within  type=inclass
+print("Ratio of Female-gender in Inclass-type ")
+(inclass_by_gender %>% filter(sex=="Female"))$count / sum((inclass_by_gender$count))
+
+##Male within  type=inclass
+print("Just to validate ratio summation")
+(inclass_by_gender %>% filter(sex=="Male"))$count / sum((inclass_by_gender$count))
+
+
+################ ONLINE #######################################
+
+online_by_gender <- dat %>%
+  filter(type=="online") %>%
+  group_by(sex) %>%
+  summarise(count=n())
+
+online_by_gender
+
+##Female within  type=online
+print("Ratio of Female-gender in online-type ")
+(online_by_gender %>% filter(sex=="Female"))$count / sum((online_by_gender$count))
+
+##Male within  type=online
+print("Just to validate ratio summation")
+(online_by_gender %>% filter(sex=="Male"))$count / sum((online_by_gender$count))
+
+#########################################################################################
+library(tidyverse)
+library(caret)
+library(dslabs)
+
+data(reported_heights)
+
+dat <- mutate(reported_heights, date_time = ymd_hms(time_stamp)) %>%
+  filter(date_time >= make_date(2016, 01, 25) & date_time < make_date(2016, 02, 1)) %>%
+  mutate(type = ifelse(day(date_time) == 25 & hour(date_time) == 8 & between(minute(date_time), 15, 30), "inclass","online")) %>%
+  select(sex, type)
+
+y <- factor(dat$sex, c("Female", "Male"))
+x <- dat$type
+
+glimpse(dat)
+glimpse(y)
+glimpse(x)
+
+set.seed(2000)
+test_index <- createDataPartition(y, times = 1, p = 1.0, list = FALSE)
+
+glimpse(test_index)
+y_hat <- sample(c("Male", "Female"), length(dat), replace = TRUE)
+glimpse(y_hat)
+mean(y_hat == dat$sex)
+
+
+# examine the accuracy of 10 cutoffs
+cutoff <- c("online","inclass")
+cutoff
+
+accuracy <- map_dbl(cutoff, function(x){
+                    y_hat <- ifelse(dat$type == x, "Male", "Female")
+                    mean(y_hat == dat$sex)
+                    })
+glimpse(accuracy)
+max(accuracy)
+best_cutoff <- cutoff[which.max(accuracy)]
+best_cutoff
+
+
+#print(ifelse(dat$type==best_cutoff, "Male", "Female") %>% factor(levels=levels(dat$sex)))
+
+
+y_hat <- ifelse(dat$type==best_cutoff, "Male", "Female")
+#y_hat <- factor(y_hat)
+mean(y_hat == dat$sex)
+summary(y_hat)
+
+# tabulate each combination of prediction and actual value
+table(predicted = y_hat, actual = dat$sex)
+dat %>% 
+  mutate(y_hat = y_hat) %>%
+  group_by(sex) %>% 
+  summarize(accuracy = mean(y_hat == sex))
+
+prev <- mean(y == "Male")
+
+#y_hat - predicted data
+#dat$sex - actual data
+length(y_hat)
+length(dat$sex)
+class(y_hat)
+class(dat$sex)
+
+y_hat <- factor(y_hat)
+actual <- factor(dat$sex)
+
+confusionMatrix(
+  y_hat,
+  actual
+)
+
+sensitivity(y_hat,dat$sex)
+specificity(y_hat,dat$sex)
+
+
+#summary(heights)
+
+
+table(y_hat,y)
+
+dat %>% 
+  mutate(y_hat = y_hat) %>%
+   group_by(sex) %>% 
+      summarize(accuracy = mean(y_hat == sex))
+
+
+prev <- mean(y == "Male")
+
+
+#Prevalence: How often does the yes condition actually occur in our sample?
+
+summary(y)
+
+
+
+
+

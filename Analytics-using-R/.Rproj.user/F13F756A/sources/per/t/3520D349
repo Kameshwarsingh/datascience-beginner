@@ -1,0 +1,26 @@
+{
+    "id": "3520D349",
+    "path": "E:/software/reboot/datascience-beginner/Analytics-using-R/edx/MachineLearning/KNN_Logistics.R",
+    "project_path": "edx/MachineLearning/KNN_Logistics.R",
+    "type": "r_source",
+    "hash": "2965241028",
+    "contents": "",
+    "dirty": false,
+    "created": 1702919860757.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "53,0",
+        "scrollLine": "33"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1595958177,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1595958177,
+    "read_only": false,
+    "read_only_alternatives": []
+}
